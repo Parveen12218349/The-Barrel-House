@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to The Barrel House{% endblock %}
+
+{% block content %}
+
+
+<!-- Hero Banner with background image and quote (no JS or CSS) -->
+<section class="relative bg-cover bg-center h-[350px] mb-6 rounded-xl overflow-hidden" style="background-image: url('{% static 'images/banner-3.png' %}');">
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-center px-4">
+    <div class="text-white max-w-2xl" style="font-family: 'Orbitron', sans-serif;">
+      <h2 class="text-4xl md:text-5xl font-bold">
+        Discover Premium Spirits
+      </h2>
+      <p class="mt-4 text-lg md:text-xl text-gray-200">
+        "A good spirit tells a better story."
+      </p>
+      <a href="{% url 'products' %}" class="inline-block mt-6 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg text-lg font-semibold">
+        Shop Now
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- Explore Categories Section -->
+<section class="py-16 px-6 bg-cover bg-center bg-no-repeat" style="background-image: url('{% static 'images/wood-bg.png' %}');">
+  <h2 class="text-3xl font-bold text-center text-amber-100 drop-shadow mb-10">Explore Categories</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+
+    <a href="{% url 'products' %}?category=Whiskey" class="bg-white/90 backdrop-blur-sm border border-amber-300 shadow-xl text-center py-6 rounded-xl hover:bg-amber-50 transition duration-300">
+      <p class="text-lg font-semibold text-amber-900">Whiskey</p>
+    </a>
+
+    <a href="{% url 'products' %}?category=wine" class="bg-white/90 backdrop-blur-sm border border-amber-300 shadow-xl text-center py-6 rounded-xl hover:bg-amber-50 transition duration-300">
+      <p class="text-lg font-semibold text-amber-900">wine</p>
+    </a>
+
+    <a href="{% url 'products' %}?category=jin" class="bg-white/90 backdrop-blur-sm border border-amber-300 shadow-xl text-center py-6 rounded-xl hover:bg-amber-50 transition duration-300">
+      <p class="text-lg font-semibold text-amber-900">jin</p>
+    </a>
+
+    <a href="{% url 'products' %}?category=All" class="bg-white/90 backdrop-blur-sm border border-amber-300 shadow-xl text-center py-6 rounded-xl hover:bg-amber-50 transition duration-300">
+      <p class="text-lg font-semibold text-amber-900">All</p>
+    </a>
+
+  </div>
+</section>
+
+
+
+ <!-- Featured Products -->
+<section class="bg-gradient-to-b from-white via-amber-50 to-white py-14 px-6">
+  <h2 class="text-2xl font-bold text-center text-[#743c00] mb-10"> Featured Products</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+{#  product image #}
+ {% for product in featured_products %}
+  <a href="{% url 'product_detail' product.id %}" class="block bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition">
+    {% if product.images.all %}
+      <img src="{{ product.images.all.0.image_path.url }}" class="w-full object-contain" style="max-height: 300px;" alt="product image">
+    {% else %}
+{#  image card      #}
+<img src="https://via.placeholder.com/300x400?text=No+Image" class="w-full object-contain" style="max-height: 300px;" alt="">
+{#  /product image #}
+    {% endif %}
+    <div class="p-4">
+      <h3 class="text-lg font-bold text-gray-800">{{ product.name }}</h3>
+      <p class="text-sm text-gray-600">{{ product.description|truncatechars:60 }}</p>
+      <p class="text-orange-700 font-semibold mt-2">₹{{ product.price }}</p>
+      <div class="relative">
+  {% if product.stock > 0 %}
+    <span class="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow">
+      In Stock
+    </span>
+  {% else %}
+    <span class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow">
+      Out of Stock
+    </span>
+  {% endif %}
+</div>
+
+      <p class="text-xs text-gray-500">Category: {{ product.category.name }}</p>
+      <p class="text-xs text-gray-400">Added: {{ product.created_at|date:"M d, Y" }}</p>
+    </div>
+  </a>
+{% empty %}
+  <p class="text-gray-500 col-span-full text-center">No featured products found.</p>
+{% endfor %}
+
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="mb-12 px-6">
+  <h2 class="text-2xl font-semibold mb-4 text-amber-800">Why Choose The Barrel House?</h2>
+  <ul class="list-disc pl-6 text-gray-700 space-y-2">
+    <li>✅ Legal age verification ensures compliance and safety.</li>
+    <li>✅ Wide range of premium alcoholic beverages and accessories.</li>
+    <li>✅ Trusted delivery and seamless user experience.</li>
+  </ul>
+</section>
+
+<!-- Newsletter -->
+<section class="bg-gray-100 p-6 rounded-xl text-center">
+  <h2 class="text-xl font-semibold mb-2 text-amber-700">Stay in the Loop</h2>
+  <p class="text-gray-600 mb-4">Get updates on new arrivals, offers, and featured collections.</p>
+  <form method="POST" action="#" class="flex flex-col sm:flex-row justify-center gap-2">
+      <label>
+          <input type="email" placeholder="Enter your email" class="px-4 py-2 rounded border w-full sm:w-1/2" required>
+      </label>
+      <button type="submit" class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-amber-800">
+      Subscribe
+    </button>
+  </form>
+</section>
+
+{% endblock %}

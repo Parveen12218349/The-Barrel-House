@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Place Order – The Barrel House{% endblock %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto my-10 px-6">
+  <h2 class="text-3xl font-bold text-center text-amber-900 mb-6">Review Your Order</h2>
+
+  {% if cart_items %}
+    <!-- Cart Checkout Items -->
+    <div class="space-y-4">
+      {% for item in cart_items %}
+        <div class="flex justify-between items-center border-b pb-3">
+          <div>
+            <h3 class="text-lg font-semibold">{{ item.product.name }}</h3>
+            <p class="text-sm text-gray-600">Qty: {{ item.quantity }}</p>
+          </div>
+          <p class="text-lg font-bold text-amber-800">₹{{ item.product.price|floatformat:2 }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% elif single_product %}
+    <!-- Single Product Buy Now -->
+    <div class="flex justify-between items-center border-b pb-3">
+      <div>
+        <h3 class="text-lg font-semibold">{{ single_product.name }}</h3>
+        <p class="text-sm text-gray-600">Qty: 1</p>
+      </div>
+      <p class="text-lg font-bold text-amber-800">₹{{ single_product.price|floatformat:2 }}</p>
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500">No items to order.</p>
+  {% endif %}
+
+  {% if cart_items or single_product %}
+    <!-- Total -->
+    <div class="mt-6 text-right">
+      <p class="text-xl font-semibold">Total: ₹{{ total_price|floatformat:2 }}</p>
+    </div>
+
+    <!-- Order Form -->
+    {% if single_product %}
+      <form method="post" action="{% url 'place_order_with_product' single_product.id %}" class="mt-6 space-y-4">
+    {% else %}
+      <form method="post" action="{% url 'place_order' %}" class="mt-6 space-y-4">
+    {% endif %}
+      {% csrf_token %}
+
+      <h3 class="text-lg font-semibold text-amber-900 mb-2">Shipping Address</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+          <input type="text" name="full_name" id="full_name" required class="mt-1 w-full border border-gray-300 rounded-md shadow-sm p-2">
+        </div>
+
+        <div>
+          <label for="mobile_number" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+          <input type="tel" name="mobile_number" id="mobile_number" required class="mt-1 w-full border border-gray-300 rounded-md shadow-sm p-2">
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="street_address" class="block text-sm font-medium text-gray-700">Street Address</label>
+          <input type="text" name="street_address" id="street_address" required class="mt-1 w-full border border-gray-300 rounded-md shadow-sm p-2">
+        </div>
+
+        <div>
+          <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+          <input type="text" name="city" id="city" required class="mt-1 w-full border border-gray-300 rounded-md shadow-sm p-2">
+        </div>
+
+        <div>
+          <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+          <input type="text" name="state" id="state" required class="mt-1 w-full border border-gray-300 rounded-md shadow-sm p-2">
+        </div>
+
+        <div>
+          <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+          <input type="text" name="country" id="country" required class="mt-1 w-full border border-gray-300 rounded-md shadow-sm p-2">
+        </div>
+
+        <div>
+          <label for="postal_code" class="block text-sm font-medium text-gray-700">Postal Code</label>
+          <input type="text" name="postal_code" id="postal_code" required class="mt-1 w-full border border-gray-300 rounded-md shadow-sm p-2">
+        </div>
+      </div>
+
+      <div>
+        <label for="payment_method" class="block text-sm font-medium text-gray-700 mt-4">Payment Method</label>
+        <select name="payment_method" id="payment_method" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+          <option value="cod">Cash on Delivery</option>
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+        </select>
+      </div>
+
+      <button type="submit" class="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-xl transition mt-4">
+        Confirm Order
+      </button>
+    </form>
+
+    <div class="mt-4 text-center">
+      <a href="{% url 'product_dashboard' %}" class="text-amber-700 hover:underline">← Continue Shopping</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
