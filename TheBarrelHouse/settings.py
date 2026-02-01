@@ -79,12 +79,8 @@ WSGI_APPLICATION = 'TheBarrelHouse.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'barreldb',
-        'USER': 'postgres',
-        'PASSWORD': '2198420Pk',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
